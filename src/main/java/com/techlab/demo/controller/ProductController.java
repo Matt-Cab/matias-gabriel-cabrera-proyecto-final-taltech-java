@@ -1,65 +1,68 @@
 package com.techlab.demo.controller;
 
+import com.techlab.demo.dto.ProductCreateRequest;
+import com.techlab.demo.dto.ProductResponse;
+import com.techlab.demo.dto.ProductUpdateRequest;
 import com.techlab.demo.model.Product;
-import com.techlab.demo.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.techlab.demo.service.ProductServiceImpl;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
 @RestController
+@RequestMapping("/api/products")
 public class ProductController {
 
-//    @Autowired // el autowired tambien puede ir sobre el constructor en el caso de que haya multiples constructores para indicar cual utilizar
-    private ProductService productService;
+    private final ProductServiceImpl productServiceImpl;
 
-    public ProductController(ProductService productService) {
-        this.productService = productService;
+    public ProductController(ProductServiceImpl productServiceImpl) {
+        this.productServiceImpl = productServiceImpl;
     }
 
-    @PostMapping("/products")
-    public Product createProduct(@RequestBody Product product) {
-        return this.productService.createProduct(product);
+    // @Valid me permite validar con las anotaciones dentro del dto
+    // @RequestBody me permite recibir los datos en formato json
+    @PostMapping
+    public ResponseEntity<ProductResponse> createProduct(@Valid @RequestBody ProductCreateRequest request) {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(this.productServiceImpl.createProduct(request));
     }
 
 //    public List<String> showProducts(@RequestParam(required = false, defaultValue = "") String productName, @RequestParam double price) {
-    @GetMapping("/products")
-    public List<Product> showProducts(
-            @RequestParam(required = false) String productName,
+    @GetMapping
+    public ResponseEntity<List<ProductResponse>> getProducts(
+            @RequestParam(required = false, defaultValue = "") String productName,
             @RequestParam(required = false) Double productPrice) {
-        return this.productService.getProducts(productName, productPrice);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(this.productServiceImpl.getProducts(productName, productPrice));
     }
 
-//    // TODO: fix
-//    @GetMapping("/products/productName")
-//    public List<String> getProductsByName(@RequestParam String productName) {
-//        return List.of("producto1", productName);
-//    }
-//
-//    @GetMapping("/products/productPrice")
-//    public List<String> getProductsByPrice(@RequestParam double productPrice) {
-//        return List.of("producto1", String.valueOf(productPrice));
-//    }
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductResponse> getProductById(@PathVariable UUID id) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(this.productServiceImpl.getProductById(id));
+    }
 
-//    @PutMapping("/products/{id}")
-//    public String editProduct(@PathVariable(name = "id") String productId) {
-    @PutMapping("/products/{id}")
-    public Product editProduct(@PathVariable UUID id, @RequestBody Product productData) {
-        return this.productService.editProduct(id, productData);
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductResponse> updateProduct(@PathVariable UUID id, @Valid @RequestBody ProductUpdateRequest productData) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(this.productServiceImpl.updateProduct(id, productData));
     }
 
     //    @PutMapping("/products/{id}")
     //    public String deleteProduct(@PathVariable(name = "id") String productId) {
-    @DeleteMapping("/products/{id}")
-    public Product deleteProduct(@PathVariable UUID id) {
-        return this.productService.deleteProduct(id);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Product> deleteProduct(@PathVariable UUID id)  {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(this.productServiceImpl.deleteProduct(id));
     }
-//    case 1 -> createProduct(productsList);
-//    case 2 -> showProducts(productsList);
-//    case 3 -> getProductsByName(productsList);
-//    case 4 -> editProduct(productsList);
-//    case 5 -> deleteProduct(productsList);
-//    case 6 -> createOrder(productsList, ordersList);
-//    case 7 -> showOrders(ordersList);
+
 }

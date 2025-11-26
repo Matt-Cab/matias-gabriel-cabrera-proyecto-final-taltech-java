@@ -2,29 +2,30 @@ package com.techlab.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.techlab.demo.exception.InsufficientStockException;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
 @Getter
 @Entity
+@NoArgsConstructor
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Column(length = 150, nullable = false)
     private String name;
-    private Double price;
-    private Integer stock;
 
-    protected Product() {
-        // Constructor vacío requerido por JPA
-    }
+    @Column(nullable = false)
+    private Double price;
+
+    @Column(nullable = false)
+    private Integer stock;
 
     public Product(UUID id) {
         this.id = id;
