@@ -7,12 +7,14 @@ import com.techlab.demo.exception.ProductNotFoundException;
 import com.techlab.demo.mapper.ProductMapper;
 import com.techlab.demo.model.Product;
 import com.techlab.demo.repository.ProductRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+//@RequiredArgsConstructor // me permite evitar tener que crear el constructor de manera manual
 @Service
 public class ProductServiceImpl implements ProductService {
 
@@ -84,14 +86,6 @@ public class ProductServiceImpl implements ProductService {
                             .orElseThrow(() -> new ProductNotFoundException(id));
 
             Product productUpdated = this.productMapper.updateToProduct(productFound, productData);
-
-//            String newName = productData.name();
-//            Double newPrice = productData.price();
-//            Integer newStock = productData.stock();
-//
-//            if (newName != null && !newName.isEmpty()) productFound.setName(newName);
-//            if (newPrice != null && newPrice > 0) productFound.setPrice(newPrice);
-//            if (newStock != null && newStock >= 0) productFound.setStock(newStock);
 
             try {
                 Product productSaved = this.productRepository.save(productUpdated);

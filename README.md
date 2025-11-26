@@ -21,14 +21,20 @@ Service, Repository y Model).
      └── com.example.product
           ├── controller
           │     └── ProductController.java
+          ├── dto
+          │     └── ProductCreateRequest.java
+          │     └── ProductResponse.java
+          │     └── ProductUpdateRequest.java
           ├── service
           │     └── ProductService.java
+          │     └── ProductServiceImpl.java
           ├── repository
           │     └── ProductRepository.java
           ├── model
           │     └── Product.java
           ├── exceptions
           │     └── InsufficientStockException.java
+          │     └── ProductNotFoundException.java
           └── ProductApplication.java
 
 ------------------------------------------------------------------------
@@ -68,13 +74,16 @@ Interactúa con el repositorio. - Lanza excepciones cuando corresponde.
 Exponen los endpoints REST:
 
 
-| Método   | Endpoint         | Descripción                      |
-| :------- | :------:         | -------:                         |
-| GET      | `/products`      | Lista todos los productos        |
-| GET      | `/products/{id}` | Obtiene un producto por ID       |
-| POST     | `/products`      | Crea un nuevo producto           |
-| PUT      | `/products/{id}` | Actualiza un producto existente  |
-| DELETE   | `/products/{id}` | Elimina un producto              |
+| Método |                    Endpoint                    |                                                                                          Descripción |
+|:-------|:----------------------------------------------:|-----------------------------------------------------------------------------------------------------:|
+| GET    |                  `/products`                   |                                                                            Lista todos los productos |
+| GET    |          `/products?productPrice=150`          |                                               Lista todos los productos por precio menor al indicado |
+| GET    |         `/products?productName=mouse`          |                                Lista todos los productos que contenga en su nombre el texto indicado |
+| GET    | `/products?productPrice=150&productName=mouse` | Lista todos los productos por precio menor al indicado y que contenga en su nombre el texto indicado |
+| GET    |                `/products/{id}`                |                                                                           Obtiene un producto por ID |
+| POST   |                  `/products`                   |                                                                               Crea un nuevo producto |
+| PUT    |                `/products/{id}`                |                                                                      Actualiza un producto existente |
+| DELETE |                `/products/{id}`                |                                                                                  Elimina un producto |
 
 ------------------------------------------------------------------------
 
@@ -87,7 +96,7 @@ Exponen los endpoints REST:
 
 La API estará disponible en:
 
-    http://localhost:8080/products
+    http://localhost:8080/api/products
 
 ------------------------------------------------------------------------
 
