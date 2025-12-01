@@ -68,36 +68,22 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponse getProductById(UUID id) {
 
-        try {
         Product product = this.productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException(id));
         return this.productMapper.toResponse(product);
 
-        } catch (ProductNotFoundException e) {
-            System.out.println("Error al obtener el producto: " + e.getMessage());
-        }
-
-        return null;
     }
 
     public ProductResponse updateProduct(UUID id, ProductUpdateRequest productData) {
-        try {
+
             Product productFound = this.productRepository.findById(id)
                             .orElseThrow(() -> new ProductNotFoundException(id));
 
             Product productUpdated = this.productMapper.updateToProduct(productFound, productData);
 
-            try {
-                Product productSaved = this.productRepository.save(productUpdated);
-                return this.productMapper.toResponse(productSaved);
-            } catch (RuntimeException e) {
-                System.out.println("Error al actualizar producto: " + e.getMessage());
-            }
-        } catch (ProductNotFoundException e) {
-            System.out.println("Error al obtener el producto: " + e.getMessage());
-        }
+            Product productSaved = this.productRepository.save(productUpdated);
 
-        return null;
+            return this.productMapper.toResponse(productSaved);
     }
 
     @Override
